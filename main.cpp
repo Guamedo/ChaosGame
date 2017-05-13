@@ -5,8 +5,7 @@
 #include <GL/gl.h>
 #include <array>
 #include <sstream>
-#include "GL/freeglut.h"
-
+#include <GL/glut.h>
 
 #include "Point.h"
 
@@ -17,7 +16,7 @@ static const int window_height = 600;
 
 
 bool paint = false;
-const unsigned int interval = 1000/60;
+const unsigned int interval = 1000/100;
 vector<Point> puntuak;
 vector<Point> hasieraPuntuak;
 Point lastPoint;
@@ -60,7 +59,7 @@ void draw() {
     glLoadIdentity();
     for(unsigned int i = 0; i < puntuak.size(); i++){
         glColor3f(puntuak.at(i).col[0],puntuak.at(i).col[1],puntuak.at(i).col[2]);
-        drawFilledCircle(puntuak.at(i).posX,puntuak.at(i).posY,2);
+        drawFilledCircle(puntuak.at(i).posX,puntuak.at(i).posY,1);
     }
     ostringstream oss;
     oss << "Iteracion: " << iter;
@@ -83,20 +82,22 @@ int random_range(int min, int max){
 }
 
 void addPoint(){
+    array<float, 3> col;
     unsigned int r = (unsigned int)random_range(0,hasieraPuntuak.size()-1);
     switch (r){
         case 0:
-            lastPoint = Point(abs(lastPoint.posX+hasieraPuntuak.at(r).posX)/2, abs(lastPoint.posY+hasieraPuntuak.at(r).posY)/2, {1.0,0.0,0.0});
+            col = {1.0,0.0,0.0};
             break;
         case 1:
-            lastPoint = Point(abs(lastPoint.posX+hasieraPuntuak.at(r).posX)/2, abs(lastPoint.posY+hasieraPuntuak.at(r).posY)/2, {0.0,1.0,0.0});
+            col = {0.0,1.0,0.0};
             break;
         case 2:
-            lastPoint = Point(abs(lastPoint.posX+hasieraPuntuak.at(r).posX)/2, abs(lastPoint.posY+hasieraPuntuak.at(r).posY)/2, {0.0,0.0,1.0});
+            col = {0.0,0.0,1.0};
             break;
         default:
             break;
     }
+    lastPoint = Point(abs(lastPoint.posX+hasieraPuntuak.at(r).posX)/2, abs(lastPoint.posY+hasieraPuntuak.at(r).posY)/2, col);
     puntuak.push_back(lastPoint);
 }
 
@@ -113,7 +114,6 @@ void puntuakHasieratu(){
     hasieraPuntuak.push_back(Point(10,10,{1.0,1.0,1.0}));
     hasieraPuntuak.push_back(Point(590, 10,{1.0,1.0,1.0}));
     hasieraPuntuak.push_back(Point(290, 590,{1.0,1.0,1.0}));
-
     puntuak = hasieraPuntuak;
 }
 
